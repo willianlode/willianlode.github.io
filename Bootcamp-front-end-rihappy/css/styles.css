@@ -1,0 +1,46 @@
+body{
+    margin: 0%;
+    background-color: rgb(228, 0, 43);
+}
+header{
+    text-align:center;
+    color: rgb(228, 0, 43);
+    padding: 2vh;
+    font-size: 1.5em;
+    background-color: rgb(1, 33, 105);
+    min-height: 5vh;
+}
+form{
+    width:100vw;
+    
+}
+label{
+    margin: 2vh;
+    display:inline-table;
+    color: rgb(255, 255, 255);
+}
+input{
+    margin: 2vh;
+    border-radius: 2vh;
+}
+input[type="checkbox"]{
+    border-radius: 50%;
+    outline: none;
+    background-color:rgb(202, 50, 50);
+    color: blueviolet;
+}
+input[type="submit"]:hover{
+    cursor: pointer;
+    background-color: aqua;
+}
+button{
+    margin: 2vh;
+    border-radius: 2vh;
+}
+button:hover{
+    margin: 2vh;
+    border-radius: 2vh;
+    cursor: pointer;
+    background-color: aqua;
+
+}

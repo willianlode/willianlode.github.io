@@ -1,0 +1,43 @@
+body{
+    margin: 0%;
+    background-color: rgb(228, 0, 43);
+}
+header{
+    text-align:center;
+    color: rgb(244, 0, 43);
+    padding: 2vh;
+    font-size: 1.5em;
+    background-color: rgb(1, 33, 105);
+    min-height: 5vh;
+}
+ul{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+li{
+    list-style:none;
+    flex-wrap: wrap;
+    text-align: center;
+    background-color:rgb(1, 33, 105);
+    height: auto;
+    width: auto;
+    padding: 2vh;
+    border-radius: 2vh;
+    margin: 2vh;
+}
+img{
+    max-width:30vh;
+    border-radius: 30vh;
+}
+a{
+    display: block;
+    text-decoration: none;
+    text-align: center;
+    color: rgb(244, 0, 43);
+}
+a:hover{
+    background-color: rgb(244, 0, 43);
+    color: rgb(1, 33, 105);
+    border-radius: 0.5vh;
+}
