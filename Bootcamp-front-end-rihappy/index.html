@@ -8,15 +8,30 @@
 </head>
 <body>
     <header>Bem-vindo ao meu portfolio de projetos!</header>
-    <form action="" method ="get" id="study-form">
-        <label for="name-field">Digite seu nome: <input type="text" name="name" id="name-field"> </label>
-        <label for="phone-field">Digite seu telefone: <input type="tel" name="phone" id="phone-field" placeholder="(00)00000-0000"></label>
-        <label for="mail-field">Digite seu email: <input type="email" name="email" id="mail-field" placeholder="exemplo@email.com"></label>
-        <label for="preferences">Escolha suas preferências: <input type="checkbox" name="preferences[]" id="preferences-field" value="javascript"> Javascript<input type="checkbox" name="preferences[]" id="preferences-field" value="python"> Python
-        <input type="checkbox" name="preferences[]" id="preferences-field" value="java"> Java</label>
-        <input type="submit"> 
-        <button type="reset">Limpar</button>
-    </form>
+    <fieldset>
+        <legend style="text-align: center; color: rgb(8, 2, 188);">Meu formulário </legend>
+        <form action="" method ="get" id="study-form">
+            <div><label for="name-field">Digite seu nome: <input type="text" name="name" id="name-field"> </label>
+                <label for="phone-field">Digite seu telefone: <input type="tel" name="phone" id="phone-field" placeholder="(00)00000-0000"></label>
+                <label for="mail-field">Digite seu email: <input type="email" name="email" id="mail-field" placeholder="exemplo@email.com"></label>
+            </div>
+            <div>
+                <label for="preferences">Escolha suas preferências: <input type="checkbox" name="preferences[]" id="preferences-field" value="javascript"> Javascript<input type="checkbox" name="preferences[]" id="preferences-field" value="python"> Python
+                <input type="checkbox" name="preferences[]" id="preferences-field" value="java"> Java</label>
+            </div> 
+            <div><button type="submit">Enviar</button> 
+                <button type="reset">Limpar</button></div>
+        </form>
+    </fieldset>
+    <footer style="display: flex;">
+        <nav><img src="./img/me.jfif" alt="" style="border-radius: 50%;"></nav>
+        <nav>Willian Lode</nav>
+        <nav>Contato<ul>
+            <li><a href="https://www.linkedin.com/in/willianlode/" target="_blank">LinkedIn</a></li>
+            <li><a href="https://github.com/willianlode" target="_blank">Github</a></li>
+            <li><a href="mailto:willianlode@hotmail.com">E-mail: willianlode@hotmail.com</a></li>
+        </ul></nav>
+    </footer>
     <script src="./js/script.js"></script>
 </body>
 </html>

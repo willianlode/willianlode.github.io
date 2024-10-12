@@ -11,8 +11,13 @@ header{
     min-height: 5vh;
 }
 form{
-    width:100vw;
+    width:90vw;
     
+}
+fieldset{
+    margin: 10vh;
+    margin-left: 2vh;
+    border-radius: 4vh;
 }
 label{
     margin: 2vh;
@@ -42,5 +47,20 @@ button:hover{
     border-radius: 2vh;
     cursor: pointer;
     background-color: aqua;
+
+}
+nav{
+    padding: 2vw 5vw;
+
+}
+img{
+    height:max-content;
+}
+footer{
+    margin: 0;
+    position: absolute;
+    bottom: 0%;
+    width: 100vw;
+    height: 15vh;
 
 }
