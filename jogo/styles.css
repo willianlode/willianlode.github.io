@@ -1,0 +1,18 @@
+#container{
+    position: absolute;
+    margin: 3vh;
+    border-style: solid;
+    border-color: black;
+    height: 90vh;
+    width: 90vh;
+    left: 50px;
+}
+#game-field{
+    position: absolute;
+    border-style: solid;
+    border-color: black;
+    height: 80vh;
+    width: 80vh;
+    margin-top: 2.5vh;
+    margin-left: 5vh;
+}

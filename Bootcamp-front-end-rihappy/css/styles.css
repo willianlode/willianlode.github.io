@@ -24,6 +24,10 @@ label{
     display:inline-table;
     color: rgb(255, 255, 255);
 }
+legend{
+    text-align: center; 
+    color: rgb(8, 2, 188);
+}
 input{
     margin: 2vh;
     border-radius: 2vh;
@@ -55,12 +59,26 @@ nav{
 }
 img{
     height:max-content;
+
 }
 footer{
     margin: 0;
     position: absolute;
-    bottom: 0%;
+    bottom:0vh;
     width: 100vw;
     height: 15vh;
-
+    display:flex;
+    border: 15px solid;
+    border-image-source: linear-gradient(red blue);
+}
+footer div{
+    margin: 0vh 20vh;
+    align-self: center;
+}
+footer img{
+    border-radius: 50%; 
+    height: 10vh;
+}
+li li{
+    color: brown;
 }
