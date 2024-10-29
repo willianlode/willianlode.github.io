@@ -1,0 +1,40 @@
+* {
+    font-family: 'Roboto', sans-serif;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f6f8fc;
+}
+
+.content {
+    width: 100vw;
+    height: 100%;
+    padding: 1rem;
+    background-color: #eceaea;
+    
+}
+
+@media screen and (min-width: 992px) {
+    .content {
+        max-width: 992px;
+        min-height: 100vh;
+        margin: 1rem auto;
+        border-radius: 1rem;
+    }
+    footer{
+        max-width: 980px;
+    }
+}
+
+@media screen and (min-width: 576px) and (max-width: 992px){
+    .content {
+        max-width: 576px;
+        min-height: 100vh;
+        margin: 1rem auto;
+        border-radius: 1rem;
+    }
+    footer{
+        max-width: 566px;
+    }
+}    
