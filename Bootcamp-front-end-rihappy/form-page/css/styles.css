@@ -1,6 +1,7 @@
 body{
     margin: 0%;
-    background-color: rgb(228, 0, 43);
+    height: 100vh;
+    background: linear-gradient(purple, darkred ,red, rgb(246, 83, 110), blue) no-repeat;
 }
 header{
     text-align:center;
@@ -68,8 +69,9 @@ footer{
     width: 100vw;
     height: 15vh;
     display:flex;
-    border: 15px solid;
-    border-image-source: linear-gradient(red blue);
+    font-weight: 600;
+    font-size: large;
+    
 }
 footer div{
     margin: 0vh 20vh;
@@ -78,6 +80,19 @@ footer div{
 footer img{
     border-radius: 50%; 
     height: 10vh;
+}
+footer li{
+    list-style-type: none;
+}
+footer a{
+    text-decoration-line: none;
+    color:inherit;
+   
+}
+footer a:hover{
+    background-color: rgb(7, 128, 128);
+    border-radius: 10% 50%;
+    
 }
 li li{
     color: brown;
