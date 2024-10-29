@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+html{
+    font-family: Roboto, Arial, Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    line-height: 1.7;
+    position: absolute;
+    text-align: center;
+    padding: 5vh 0vw;
+    background: linear-gradient(rgb(133, 196, 239), rgb(69, 67, 135) ,rgb(91, 56, 116), rgb(233, 81, 124), blue);
+    color:antiquewhite;
+    align-items: center;
+}
+h1{
+    font-size: 2em;
+    font-weight: bold;
+}
+h2{
+    font-size: 1.5em;
+    font-weight: bold;
+}
+p{
+    font-size: medium;
+    max-width: 90vw;
+    margin: 0 auto;
+}
+section{
+    display:inline-block;
+    margin: 5vh 0vw;
+}
+button{
+    margin: 5vh auto 3vh;
+    padding: 2vh 5vw;
+    background: radial-gradient(circle, rgb(69, 67, 135) 0%, purple 50%, antiquewhite 100%);
+    border: 5px groove wheat;
+    border-radius: 15px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+.modules-list{
+    position: relative;
+    display: block;
+    justify-items: center;
+    width: 99vw;
+    height: auto;
+    margin: 10vh 0vw;
+    padding:5vh 0vw 5vh 0vw;
+    border-top: 4px solid antiquewhite;
+    border-bottom: 4px solid antiquewhite;
+    
+}
+.module{
+    display:inline-block;
+    padding: 2vh;
+    width: 50vw;
+    border: 2px double;
+    border-radius: 5vh;
+    margin: 3vh 5vw;
+}
+span{
+    display: block;
+}
+img{
+    max-width: 70vw;
+}
+#professional-challenges h2{
+    text-transform: uppercase;
+    color:whitesmoke;
+    text-shadow: whitesmoke;
+}
+a{
+    color: aqua;
+}
+a:hover{
+    text-decoration: underline;
+}
