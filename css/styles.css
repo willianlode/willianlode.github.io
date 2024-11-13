@@ -23,21 +23,19 @@ ul{
     flex-wrap: nowrap;
     max-width: 100%;
     overflow: auto;
+    font-size: 0.6rem;
+    font-weight: 100;
 }
 
 li{
     list-style:none;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
     background-color:rgb(1, 33, 105);
     /*height: 320px;
     width: 300px;*/
     margin: 2%;
     padding: 2%;
     border-radius: 2vh;
-    color: rgb(235, 217, 217);
+    
 }
 
 img{
@@ -45,10 +43,16 @@ img{
     border-radius: 150px; 
     margin: 5px; 
 }
-a{
+li a{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
     text-decoration: none;
     text-align:center;
-    color: rgb(244, 0, 43);
+    color: rgb(235, 217, 217);
+    height: 100%;
+    width: 100%;
 }
 a:hover{
     background-color: rgb(59, 81, 202);
