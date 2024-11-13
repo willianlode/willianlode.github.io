@@ -37,6 +37,7 @@ let points=0;
 let items;
 let item;
 
+//shulling emojis
 for (let i = emojis.length -1; i > 0; i--) {
   let j = Math.floor(Math.random() * (i+1));
   let k = emojis[i];
@@ -58,13 +59,7 @@ function init(){
     item.addEventListener("click", turnCards);
   }
 };
-function checkWait(){
-  items=document.getElementsByClassName("item");
-  for(let i=0;i<items.length;i++){
-    item=items[i];
-    item.removeEventListener("click", turnCards);
-  }
-}
+
 function turnCards(){
   if(selectedCards.length===2){
     console.log(turnedElements);
@@ -87,10 +82,10 @@ function turnCards(){
     turnedElements.push(this);
   };  
   if(selectedCards.length===2){
-    //setTimeout(checkMatch,1000);
+    
     turnedElements.push(this);
     checkMatch();
-    //checkWait();
+    
   }
 };
 
@@ -109,15 +104,7 @@ function checkMatch(){
     turnedElements.pop();
     turnedElements.pop();
     scorePoints();
-  }else{
-    //selectedCards.pop();
-    //selectedCards.pop();
-    //turnedElements.forEach((turnedElement) => {
-      //turnedElement.className="item";
-    //});
-    //turnedElements=[];
   }
-  //init();
 };
 function scorePoints(){
   points++;
