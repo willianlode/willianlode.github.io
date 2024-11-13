@@ -12,43 +12,38 @@ body{
     top:50%;
     transform: translate(-50%, -50%);
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     gap: 30px;
-    width: 75vh;
+    width: 80vh;
     max-width: 95vw;
-    height: 90vh;
-    
+    height: 90vh; 
     background-color: #8a2be2;
 }
 .game-panel{
     display: flex;
     flex-direction: row;
-    justify-items:center;   
+    justify-content:space-evenly;   
     font-size: 1.5rem;
+    width: 90%;
+    position: relative;
+    top:1rem
 }
-.game-panel>div{
-    position: absolute;
-    left: 1%;
-}
-#score{
-    
-}
+
 h2{
     font-size: 2rem;
     letter-spacing: 0.1px;
     text-transform: uppercase;
-    color:#f0f8ff;
-    
+    color:#f0f8ff;   
 }
 .game{
-    width: 90%;
-    height: 90%;
+    width: 85%;
+    height: 100%;
     display:flex;
     flex-wrap: wrap;
     position: relative;
     align-items: center;
-    justify-content: center;
-    gap: 5px;
+    justify-content:center;
+    
     border: 2px solid #ff0000;
 }
 .reset{
@@ -65,12 +60,14 @@ h2{
 .item{
     position: relative;
     display:block;
-    font-size: 5vh;
+    font-size: 2rem;
     text-align: center;
     border: 1px solid #8f7c7c;
-    margin: 1vh;
-    height: 10vh;
-    width: 10vh;
+    margin: 2%;
+    height: 15vw;
+    width: 15vw;
+    max-width: 69px;
+    max-height: 69px;
     user-select: none;
     transform: rotateY(180deg);
     transition: 0.25s;
@@ -89,12 +86,14 @@ h2{
 .turned{
     position: relative;
     display:block;
-    font-size: 5vh;
+    font-size: 2rem;
     text-align: center;
     border: 1px solid #8f7c7c;
-    margin: 1vh;
-    height: 10vh;
-    width: 10vh;
+    margin: 2%;
+    height: 15vw;
+    width: 15vw;
+    max-width: 69px;
+    max-height: 69px;
     user-select: none;
     transform: rotateY(0deg);
     backface-visibility: hidden;
