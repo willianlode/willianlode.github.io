@@ -17,40 +17,40 @@
         boaVinda.innerHTML="Bem-vindo, " + nome;
         dadosHeroi.nome=nome;
         heroButton.remove();
-        pergunta.insertAdjacentHTML("beforeend","<p>Quantos XP você já tem?</p><input type='text' name='input' id='xpInput'><button id='submitXP'>Confirmar</button><div id='nivelHeroi'></div>");
+        pergunta.insertAdjacentHTML("beforeend","<span><p>Quantos XP você já tem?</p><input type='text' name='input' id='xpInput'><button id='submitXP'>Confirmar</button><div id='nivelHeroi'></div></span>");
         xpButton=document.getElementById("submitXP");
         xpButton.addEventListener("click", concatXP);
     }
     function concatXP(){
-        var xp=parseInt(document.getElementById("xpInput").value);
+        var xpInput=parseInt(document.getElementById("xpInput").value);
         xpButton.remove();
-        dadosHeroi.xp=xp;
+        dadosHeroi.xp=xpInput;
         switch (true) {
-            case xp <= 1000:
+            case xpInput <= 1000:
                 nivel = "Ferro";
                 break;
-            case xp >= 1001 && xp <= 2000:
+            case xpInput >= 1001 && xpInput <= 2000:
                 nivel = "Bronze";
                 break;
-            case xp >= 2001 && xp <= 5000:
+            case xpInput >= 2001 && xpInput <= 5000:
                 nivel = "Prata";
                 break;
-            case xp >= 5001 && xp <= 7000:
+            case xpInput >= 5001 && xpInput <= 7000:
                 nivel = "Ouro";
                 break;
-            case xp >= 7001 && xp <= 8000:
+            case xpInput >= 7001 && xpInput <= 8000:
                 nivel = "Platina";
                 break;
-            case xp >= 8001 && xp <= 9000:
+            case xpInput >= 8001 && xpInput <= 9000:
                 nivel = "Ascendente";
                 break;
-            case xp >= 9001 && xp <= 10000:
+            case xpInput >= 9001 && xpInput <= 10000:
                 nivel = "Imortal";
                 break;
             default:
                 nivel = "Radiante";
         }
-        document.getElementById("nivelHeroi").insertAdjacentHTML("beforeend","<p>Parabéns, você já tem: " + dadosHeroi.xp + " XP points! Você está no nível " + nivel);
+        pergunta.insertAdjacentHTML("beforeend","<span><p>Parabéns, você já tem: " + dadosHeroi.xp + " XP points! Você está no nível " + nivel + "</p></span>");
         
     }
     submeter();
