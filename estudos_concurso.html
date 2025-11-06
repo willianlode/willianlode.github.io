@@ -29,6 +29,11 @@
         }
         .calendar-day {
             min-height: 120px;
+            cursor: pointer;
+            transition: background-color 0.1s;
+        }
+        .calendar-day:hover {
+            background-color: #e0e7ff; /* Lighter hover for interactivity */
         }
         .calendar-day.today {
             background-color: #ebf4ff;
@@ -36,6 +41,10 @@
         .calendar-day.other-month {
             background-color: #f9fafb;
             color: #9ca3af;
+        }
+        #topic-detail-panel {
+            min-height: 150px;
+            display: none;
         }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -129,7 +138,7 @@
                     <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-6">
                         <div>
                             <h2 class="text-2xl font-semibold text-indigo-800">Meu Plano de Estudo</h2>
-                            <p class="text-gray-700">Este é o seu calendário de ciclo de estudos até a prova. Lembre-se, a consistência é a chave!</p>
+                            <p class="text-gray-700">Clique em um dia para ver o tópico exato a ser estudado.</p>
                         </div>
                         <div class="mt-4 sm:mt-0">
                             <button id="prev-month-btn" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">❮</button>
@@ -150,84 +159,213 @@
                     <div id="calendar-days" class="grid grid-cols-7 gap-px bg-gray-200">
                     </div>
                 </section>
+
+                <!-- Topic Detail Panel -->
+                <section id="topic-detail-panel" class="mt-6 bg-white p-6 rounded-lg shadow-xl border-t-4 border-indigo-500">
+                    <h3 class="text-xl font-bold mb-2 flex items-center text-indigo-700">
+                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253"></path></svg>
+                        Tópico de Estudo do Dia: <span id="panel-date" class="ml-2 text-gray-600 font-normal"></span>
+                    </h3>
+                    <p class="text-sm font-semibold text-gray-500 border-b pb-2 mb-3">Concurso Focado: <span id="panel-cargo" class="text-indigo-600"></span></p>
+
+                    <p class="text-base mb-3"><span class="font-bold">Matéria:</span> <span id="panel-subject" class="text-gray-800"></span></p>
+                    <p class="text-lg font-bold text-gray-900"><span class="font-bold">Tópico:</span> <span id="panel-topic" class="text-indigo-900"></span></p>
+
+                    <div id="panel-empty-state" class="text-center text-gray-500 italic mt-4">
+                        <p>Clique em um dia com estudo agendado para ver o tópico detalhado.</p>
+                    </div>
+                </section>
             </div>
         </main>
 
     </div>
 
     <script>
+        // Dados do Edital (inclusão de ALERJ, UNIRIO ADM, UNIRIO Téc. Química)
         const syllabusData = {
             "Língua Portuguesa": {
-                "Alerj": ["Interpretação e compreensão de texto.", "Organização estrutural dos textos.", "Marcas de textualidade: coesão, coerência e intertextualidade.", "Modos de organização discursiva: descrição, narração, exposição, argumentação e injunção.", "Tipos textuais, características específicas de cada tipo.", "Textos literários e não literários.", "Tipologia e estrutura da frase: operações de deslocamento, substituição, modificação e correção.", "Problemas estruturais das frases.", "Norma culta.", "Pontuação e sinais gráficos.", "Organização sintática das frases: termos e orações.", "Ordem direta e inversa.", "Tipos de discurso.", "Registros de linguagem.", "Funções da linguagem.", "Elementos dos atos de comunicação.", "Estrutura e formação de palavras.", "Formas de abreviação.", "Classes de palavras, aspectos morfológicos, sintáticos, semânticos e textuais.", "Semântica: sentido próprio e figurado; antônimos, sinônimos, parônimos e hiperônimos.", "Polissemia e ambiguidade.", "Os dicionários: tipos, organização de verbetes.", "Vocabulário: neologismos, arcaísmos, estrangeirismos, latinismos.", "Ortografia e acentuação gráfica, a crase."],
-                "UNIRIO": ["Interpretação e compreensão de texto.", "Tipologia textual.", "Ortografia oficial.", "Acentuação gráfica.", "Emprego das classes de palavras.", "Emprego do sinal indicativo de crase.", "Sintaxe da oração e do período.", "Pontuação.", "Concordância nominal e verbal.", "Regência nominal e verbal.", "Significação das palavras.", "Coesão e coerência."]
+                "ALERJ - Nível III": [
+                    "Compreensão e Interpretação de Texto, Organização estrutural dos textos", 
+                    "Coesão e Coerência (Textualidade), Intertextualidade",
+                    "Tipos e Gêneros Textuais (Descrição, Narração, Exposição, Argumentação)",
+                    "Estrutura da Frase e Tipologia Frasal, Problemas estruturais das frases", 
+                    "Morfologia (Classes de palavras e seus aspectos)",
+                    "Sintaxe (Termos e Orações), Ordem direta e inversa", 
+                    "Concordância nominal e verbal", 
+                    "Regência nominal e verbal", 
+                    "Pontuação e sinais gráficos", 
+                    "Semântica (Sentido próprio e figurado, Antônimos, Sinônimos, Polissemia e Ambiguidade)", 
+                    "Ortografia e Acentuação Gráfica, Uso da Crase"
+                    ],
+                    "UNIRIO - Assist. Adm.": [
+                    "Compreensão e Interpretação de Texto, Tipologia e Gêneros Textuais", 
+                    "Semântica (Figuras de linguagem, Significação de palavras e expressões, Sinonímia e Antonímia)", 
+                    "Ortografia, Acentuação Gráfica, Uso da Crase",
+                    "Morfologia (Classes de palavras variáveis e invariáveis e seus empregos no texto)", 
+                    "Sintaxe (Relações sintático-semânticas entre orações, períodos ou parágrafos)",
+                    "Concordância verbal e nominal", 
+                    "Regência verbal e nominal", 
+                    "Colocação pronominal", 
+                    "Pontuação (Emprego dos sinais e sua função no texto)", 
+                    "Coesão (Elementos de coesão, Função textual dos vocábulos)", 
+                    "Variação linguística"
+                    ],
+                    "UNIRIO - Téc. Química": [
+                    "Compreensão e Interpretação de Texto, Tipologia e Gêneros Textuais", 
+                    "Semântica (Figuras de linguagem, Significação de palavras e expressões, Sinonímia e Antonímia)", 
+                    "Ortografia, Acentuação Gráfica, Uso da Crase",
+                    "Morfologia (Classes de palavras variáveis e invariáveis e seus empregos no texto)", 
+                    "Sintaxe (Relações sintático-semânticas entre orações, períodos ou parágrafos)",
+                    "Concordância verbal e nominal", 
+                    "Regência nominal e verbal", 
+                    "Colocação pronominal", 
+                    "Pontuação (Emprego dos sinais e sua função no texto)", 
+                    "Coesão (Elementos de coesão, Função textual dos vocábulos)", 
+                    "Variação linguística"
+                    ]
             },
             "Raciocínio Lógico-Matemático": {
-                "Alerj": ["Proposições, valor-verdade, negação, conjunção, disjunção, implicação, equivalência, proposições compostas.", "Equivalências lógicas.", "Implicações lógicas.", "Tabelas-verdade.", "Argumentos válidos.", "Proposições categóricas.", "Silogismos.", "Quantificadores.", "Conjuntos e suas operações.", "Diagramas.", "Problemas de contagem: princípio aditivo e multiplicativo.", "Arranjos, combinações e permutações.", "Probabilidade e probabilidade condicional.", "Problemas de raciocínio: deduzir informações, raciocínio sequencial, espacial e temporal."],
-                "UNIRIO": ["Estruturas lógicas.", "Lógica de argumentação.", "Diagramas lógicos.", "Sequências lógicas.", "Raciocínio lógico-quantitativo: problemas envolvendo frações, conjuntos, porcentagens, sequências, raciocínio lógico simples.", "Raciocínio analítico."]
+                "ALERJ - Nível III": [
+                    "Proposições, valor-verdade, negação, conjunção, disjunção, implicação, equivalência, proposições compostas.", "Equivalências lógicas; Problemas de raciocínio.", 
+                    "Números naturais, inteiros, racionais, reais e suas operações; Álgebra básica: equações e sistemas do primeiro grau.", "Razão, Proporção, Regra de três simples.", 
+                    "Sequências, reconhecimento de padrões, progressões aritmética e geométrica.", "Juros simples e compostos.", "Geometria básica: perímetro e área."
+                ],
+                "UNIRIO - Assist. Adm.": [
+                    "Razão, Proporção, Regra de três simples.", "Análise combinatória: permutação, arranjo, combinação.",
+                    "Probabilidade.", "Juros simples e compostos.", "Proposições, valor-verdade, negação, conjunção, disjunção, implicação, equivalência, proposições compostas."
+                ],
+                "UNIRIO - Téc. Química": [
+                    "Razão, Proporção, Regra de três simples.", "Análise combinatória: permutação, arranjo, combinação.",
+                    "Probabilidade.", "Juros simples e compostos.", "Proposições, valor-verdade, negação, conjunção, disjunção, implicação, equivalência, proposições compostas."
+                ]
             },
-            "Direito Administrativo": {
-                "Alerj": ["Estado, governo e Administração Pública: conceitos, elementos, poderes, natureza, fins e princípios.", "Fontes do Direito Administrativo.", "Organização administrativa da União.", "Administração direta e indireta.", "Entidades paraestatais.", "Agentes públicos.", "Poderes administrativos.", "Ato administrativo.", "Contratos administrativos (Lei nº 14.133/2021).", "Licitação (Lei nº 14.133/2021).", "Serviços públicos.", "Bens públicos.", "Controle e responsabilização da administração.", "Improbidade administrativa (Lei nº 8.429/1992).", "Processo administrativo (Lei nº 9.784/1999).", "Regime Jurídico dos Servidores Públicos Civis da União (Lei nº 8.112/1990)."],
-                "UNIRIO": ["Noções de organização administrativa.", "Administração direta e indireta.", "Princípios básicos da administração pública.", "Ato administrativo: conceito, requisitos, atributos, classificação e espécies.", "Poderes e deveres dos administradores públicos.", "Agentes públicos.", "Servidores públicos: cargo, emprego e função.", "Regime Jurídico Único (Lei nº 8.112/1990).", "Processo Administrativo na Administração Pública Federal (Lei nº 9.784/1999)."]
+            "Noções de Informática": {
+                "ALERJ - Nível III": [
+                    "MS-Windows 10 ou Superior (BR): pastas, diretórios, arquivos, atalhos, manipulação de arquivos.", "Utilização de ferramentas de texto, planilha e apresentação do pacote Microsoft Office (Word, Excel e PowerPoint) - versões 2013, 2016 e 365.", "Conceitos de tecnologias relacionadas à Internet, busca e pesquisa na Web; Navegadores de internet.", "Tópicos básicos de ambientes Google Workspace (Gmail, Agenda, Drive, Documentos, Planilhas).",
+                    "Microsoft Teams (chats, chamadas, trabalho em equipe).", "Utilização de ferramentas de inteligência artificial: aspectos legais, éticos e técnicos."
+                ],
+                "UNIRIO - Assist. Adm.": [
+                    "Conceitos e fundamentos básicos; softwares utilitários (compactadores, chat, e-mails, antivírus).", "Utilização de ferramentas de inteligência artificial: aspectos legais, éticos e técnicos.", "Periféricos de computadores.",
+                    "MS-Windows 10 ou Superior (BR): pastas, diretórios, arquivos, atalhos, manipulação de arquivos.", "Utilização de ferramentas de texto, planilha e apresentação do pacote Microsoft Office (Word, Excel e PowerPoint) - versões 2013, 2016 e 365.",
+                    "Conceitos de tecnologias relacionadas à Internet, busca e pesquisa na Web; Navegadores de internet.", "Conceitos básicos de segurança na Internet e vírus de computadores."
+                ],
+                "UNIRIO - Téc. Química": [
+                    "Conceitos e fundamentos básicos; softwares utilitários (compactadores, chat, e-mails, antivírus).", "Utilização de ferramentas de inteligência artificial: aspectos legais, éticos e técnicos.", "Periféricos de computadores.",
+                    "MS-Windows 10 ou Superior (BR): pastas, diretórios, arquivos, atalhos, manipulação de arquivos.", "Utilização de ferramentas de texto, planilha e apresentação do pacote Microsoft Office (Word, Excel e PowerPoint) - versões 2013, 2016 e 365.",
+                    "Conceitos de tecnologias relacionadas à Internet, busca e pesquisa na Web; Navegadores de internet.", "Conceitos básicos de segurança na Internet e vírus de computadores."
+                ]
             },
-            "Direito Constitucional": {
-                "Alerj": ["Constituição: conceito, objeto, elementos e classificações.", "Supremacia da Constituição.", "Aplicabilidade das normas constitucionais.", "Interpretação das normas constitucionais.", "Dos Princípios Fundamentais (Arts. 1º a 4º).", "Dos Direitos e Garantias Fundamentais (Arts. 5º a 17).", "Da Organização do Estado (Arts. 18 e 19, 29 a 43).", "Da Organização dos Poderes (Arts. 44 a 135).", "Processo legislativo.", "Fiscalização contábil, financeira e orçamentária.", "Do Controle de Constitucionalidade.", "Constituição do Estado do Rio de Janeiro."],
-                "UNIRIO": []
+            "Legislação Básica/Específica": {
+                "ALERJ - Nível III": [
+                    "Código de Ética Profissional do Servidor Público do Estado do RJ (Decreto nº 43.583/2012).", "Estatuto dos Funcionários Públicos (Dec-Lei nº 220/1975) e seu regulamento (Decreto nº 2.479/1979).", "Regimento Interno da ALERJ (Resolução nº 810/1997).",
+                    "Plano de Carreira (Resolução nº 590/1994).", "A Constituição do Estado do Rio de Janeiro."
+                ],
+                "UNIRIO - Assist. Adm.": [
+                    "Regime Jurídico dos Servidores Públicos Civis da União - Lei nº 8.112/1990.", "Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018).", "CF/88: Princípios Fundamentais, Direitos e Garantias Fundamentais, Administração Pública.",
+                    "Lei de Acesso à Informação - Lei nº 12.527/2011.", "Ética no Serviço Público: Código de Ética Profissional (Decreto nº 1.171/1994).", "Processo administrativo no âmbito da Administração Pública Federal (Lei 9.784/1999).",
+                    "Sanções por Improbidade Administrativa (Lei 8.429/1992).", "Forma de tratamento e de endereçamento nas comunicações (Decreto nº 9.758/2019)."
+                ],
+                "UNIRIO - Téc. Química": [
+                    "Regime Jurídico dos Servidores Públicos Civis da União - Lei nº 8.112/1990.", "Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018).", "CF/88: Princípios Fundamentais, Direitos e Garantias Fundamentais, Administração Pública.",
+                    "Lei de Acesso à Informação - Lei nº 12.527/2011.", "Ética no Serviço Público: Código de Ética Profissional (Decreto nº 1.171/1994).", "Processo administrativo no âmbito da Administração Pública Federal (Lei 9.784/1999).",
+                    "Sanções por Improbidade Administrativa (Lei 8.429/1992).", "Forma de tratamento e de endereçamento nas comunicações (Decreto nº 9.758/2019)."
+                ]
             },
-            "Administração": {
-                "Alerj": ["Evolução da Administração.", "Teorias da Administração.", "Processo administrativo: planejamento, organização, direção e controle.", "Gestão de Pessoas: conceitos, motivação, liderança, avaliação de desempenho.", "Gestão da Qualidade.", "Gestão de Projetos.", "Administração de Recursos Materiais e Patrimoniais.", "Orçamento Público: princípios, ciclo orçamentário, LRF.", "Arquivologia: conceitos, gestão de documentos."],
-                "UNIRIO": ["Noções de Administração: planejamento, organização, direção e controle.", "Gestão de Pessoas: recrutamento, seleção, treinamento, desenvolvimento, avaliação de desempenho.", "Administração de Recursos Materiais: classificação, aquisição, armazenamento, distribuição.", "Noções de Orçamento Público.", "Noções de Arquivologia: protocolo, arquivo, tipos de arquivo, gestão de documentos."]
+            "Direito Administrativo/Constitucional (Conhecimentos Específicos)": {
+                "ALERJ - Nível III": [
+                    "Dir. Administrativo: Conceito, fontes e princípios; Organização da Administração Pública (Direta e Indireta).", "Ato Administrativo, Poderes e Deveres da Administração Pública; Serviços e Bens Públicos.", "Licitações e Contratos Administrativos: Lei nº 14.133/2021.",
+                    "Dir. Constitucional: Teoria da Constituição; Princípios Fundamentais; Direitos e Garantias Fundamentais (Art. 5º).", "Organização do Estado Brasileiro; Repartição de competências.", "Organização dos Poderes: Poder Legislativo (estrutura, competências, Comissões).",
+                    "Processo Legislativo (espécies normativas, fases); Fiscalização Contábil, Financeira e Orçamentária (TCU/TCE-RJ).", "A Administração Pública na Constituição (Art. 37); Ordem Econômica e Financeira (PPA, LDO e LOA).", "Controle de Constitucionalidade e Intervenção do Estado."
+                ],
+                "UNIRIO - Assist. Adm.": [],
+                "UNIRIO - Téc. Química": []
             },
-            "Legislação": {
-                "Alerj": [],
-                "UNIRIO": ["Constituição Federal: Título III, Cap. VII (Da Administração Pública).", "Lei nº 8.112/1990 (Regime Jurídico dos Servidores Públicos Civis da União).", "Lei nº 9.784/1999 (Processo Administrativo Federal).", "Lei nº 8.429/1992 (Improbidade Administrativa).", "Decreto nº 1.171/1994 (Código de Ética Profissional do Servidor Público Civil)."]
+            "Administração Geral e Pública (Conhecimentos Específicos)": {
+                "ALERJ - Nível III": [
+                    "Teorias da Administração",
+                    "Funções e Processo Administrativo (PODC)",
+                    "Modelos de Gestão Pública",
+                    "Políticas Públicas: formulação, implementação e avaliação.",
+                    "Rotinas Administrativas: protocolo, tramitação e arquivamento.",
+                    "Comunicação Oficial: técnicas de redação de atos normativos, pareceres, ofícios e relatórios.",
+                    "Gestão de Materiais e Patrimônio",
+                    "Atendimento ao Público (LAI, Lei nº 9.094/2017); Princípios do Atendimento de Qualidade.",
+                    "Noções de Arquivologia: dado, informação, documento e arquivo; Classificação e fases do Arquivamento."
+                ],
+                "UNIRIO - Assist. Adm.": [
+                    "Introdução à Administração: conceitos, organização e empresa. Papéis e competências do administrador.",
+                    "Funções e Processo Administrativo (PODC)",
+                    "Teorias da Administração",
+                    "Mapeamento de processos, ferramentas e técnicas administrativas: organograma, fluxograma, análise SWOT, matriz de responsabilidades.",
+                    "Modelos de Gestão Pública",
+                    "Organização administrativa do Estado: administração direta e indireta.",
+                    "Gestão por resultados no setor público: conceito, indicadores, metas, avaliação de desempenho.",
+                    "Transparência, controle e fiscalização; Finanças públicas (controle interno e externo).",
+                    "Gestão de Materiais e Patrimônio",
+                    "Gestão de Pessoas: Liderança, Cultura e Clima organizacional, direitos e deveres dos servidores.",
+                    "Administração Orçamentária: PPA, LDO e LOA; Execução orçamentária e financeira (empenho, liquidação e pagamento); Contratos administrativos (fiscalização e controle)."
+                ],
+                "UNIRIO - Téc. Química": []
+            },
+            "Química (Conhecimentos Específicos)": {
+                "ALERJ - Nível III": [],
+                "UNIRIO - Assist. Adm.": [],
+                "UNIRIO - Téc. Química": [
+                    "Estrutura Atômica, Configuração eletrônica, Tabela Periódica e propriedades periódicas.", "Ligações Químicas e Forças intermoleculares.", "Substâncias Inorgânicas: ácidos, bases, sais e óxidos; Reações Químicas Inorgânicas.", "Misturas: Soluções e coloides; propriedades coligativas.", "Preparo e padronização de soluções.",
+                    "Gravimetria; Volumetria (ácido-base, precipitação, oxirredução e complexação).", "Termoquímica, Cinética Química, Equilíbrio Químico em sistemas homogêneos e heterogêneos.", "Equilíbrio ácido-base; Equilíbrio de solubilidade.",
+                    "Química Orgânica: grupos funcionais, nomenclatura, isomeria plana e espacial, reações orgânicas.", "Eletroquímica; Cálculos Estequiométricos; Bioquímica (proteínas, carboidratos, lipídeos e vitaminas).",
+                    "Segurança em laboratório: EPI/EPC, Riscos ambientais; Resíduos sólidos (ABNT NBR 10004).", "Técnicas de laboratório de química; Calibração de instrumentos volumétricos.", "Métodos de separação de misturas e purificação de substâncias químicas; extração líquido-líquido.",
+                    "Técnicas espectroscópicas: infravermelho, UV-Vis, ressonância magnética nuclear.", "Técnicas cromatográficas: camada delgada, gasosa, HPLC.", "Erros em análises químicas, tratamento de dados analíticos, Algarismos significativos; Validação de métodos analíticos."
+                ]
             }
         };
 
         const timelineData = [
-            { date: "2026-02-01", event: "Prova Objetiva", concurso: "UNIRIO - Assist. em Administração", details: "Manhã" },
-            { date: "2026-02-01", event: "Prova Objetiva", concurso: "UNIRIO - Tecnico em análises clínicas - Química", details: "Tarde" },
-            { date: "2026-02-08", event: "Prova Objetiva", concurso: "ALERJ - Nível III", details: "15h30 às 20h" },
-            { date: "2026-02-03", event: "Recurso Gabarito (Início)", concurso: "UNIRIO", details: "00h" },
-            { date: "2026-02-04", event: "Recurso Gabarito (Fim)", concurso: "UNIRIO", details: "23h59min" },
-            { date: "2026-02-09", event: "Gabarito Preliminar", concurso: "ALERJ", details: "A partir do 1º dia útil subsequente" },
-            { date: "2026-03-25", event: "Resultado Preliminar", concurso: "UNIRIO", details: "Divulgação do resultado" }
+            { date: "2026-02-01", event: "Prova Objetiva", concurso: "UNIRIO - Assist. Adm.", details: "Manhã" },
+            { date: "2026-02-01", event: "Prova Objetiva", concurso: "UNIRIO - Téc. Química", details: "Tarde" },
+            { date: "2026-02-08", event: "Prova Objetiva", concurso: "ALERJ - Nível III", details: "Tarde" }
         ];
 
-        let studyPlan = [];
+        // Definição das datas críticas para a estratégia
+        const firstExamDate = new Date("2026-02-01T00:00:00-03:00"); // Prova UNIRIO
+        const alerjSpecificPhaseStart = new Date("2026-02-02T00:00:00-03:00"); // Dia seguinte à UNIRIO
+        const finalExamDate = new Date("2026-02-08T00:00:00-03:00"); // Prova ALERJ
+
+        let studyPlan = []; // Stores {date, subject, cargo, topic, phase}
         let currentCalendarDate = new Date();
-        const allSubjects = Object.keys(syllabusData).filter(subject => {
-            return syllabusData[subject]["Alerj"]?.length > 0 || syllabusData[subject]["UNIRIO"]?.length > 0;
-        });
-        const firstExamDate = new Date(Math.min(...timelineData.filter(d => d.event.includes("Prova")).map(d => new Date(d.date + "T00:00:00-03:00"))));
+        const allSubjects = Object.keys(syllabusData);
 
         document.addEventListener('DOMContentLoaded', () => {
             setupTabs();
             populateTimeline();
             populateSubjectSelector();
             populateSubjectChecklist();
-            renderComparator();
-            
+
             const today = new Date();
-            document.getElementById('start-date').value = today.toISOString().split('T')[0];
-            
+            // Início do estudo sugerido em 11/12/2025 conforme documento, mas permitindo alteração
+            document.getElementById('start-date').value = "2025-12-11";
+
+            // Setup listeners
             document.getElementById('subject-select').addEventListener('change', renderComparator);
             document.getElementById('generate-plan-btn').addEventListener('click', generateAndRenderPlan);
-
             document.getElementById('prev-month-btn').addEventListener('click', () => changeMonth(-1));
             document.getElementById('next-month-btn').addEventListener('click', () => changeMonth(1));
 
+            // Initial render
+            renderComparator();
             currentCalendarDate = new Date(today.getFullYear(), today.getMonth(), 1);
+            renderCalendar();
         });
 
         function setupTabs() {
             const tabs = document.querySelectorAll('.tab-btn');
             const views = document.querySelectorAll('.view');
-            
+
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
                     tabs.forEach(t => t.classList.remove('active'));
                     views.forEach(v => v.classList.remove('active'));
-                    
+
                     tab.classList.add('active');
                     document.getElementById(tab.dataset.view).classList.add('active');
                 });
@@ -237,37 +375,7 @@
         function populateTimeline() {
             const list = document.getElementById('timeline-list');
             list.innerHTML = '';
-            
-            const sortedData = [...timelineData].sort((a, b) => new Date(a.date + "T00:00:00-03:00") - new Date(b.date + "T00:00:00-03:00"));
-            
-            sortedData.forEach(item => {
-                const li = document.createElement('li');
-                const itemDate = new Date(item.date + "T00:00:00-03:00");
-                const formattedDate = itemDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-                
-                let bgColor = 'bg-blue-50';
-                let textColor = 'text-blue-800';
-                
-                if (item.event.includes('Prova')) {
-                    bgColor = 'bg-red-50';
-                    textColor = 'text-red-800';
-                } else if (item.event.includes('Gabarito') || item.event.includes('Resultado')) {
-                    bgColor = 'bg-green-50';
-                    textColor = 'text-green-800';
-                }
-
-                li.className = `flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 rounded-lg ${bgColor}`;
-                li.innerHTML = `
-                    <div class="flex items-center">
-                        <span class="font-bold ${textColor} text-lg w-28">${formattedDate}</span>
-                        <div class="ml-4">
-                            <span class="font-semibold text-gray-900">${item.concurso} - ${item.event}</span>
-                            <p class="text-sm text-gray-600">${item.details}</p>
-                        </div>
-                    </div>
-                `;
-                list.appendChild(li);
-            });
+            // Os dados da timeline agora estão hardcoded na seção Visão Geral para fins de explicação da estratégia
         }
 
         function populateSubjectSelector() {
@@ -280,106 +388,279 @@
                 select.appendChild(option);
             });
         }
-        
+
         function populateSubjectChecklist() {
             const checklist = document.getElementById('subject-cycle-checklist');
             checklist.innerHTML = '';
-            allSubjects.forEach((subject, index) => {
+            // Matérias que compõem o ciclo sinérgico principal
+            const synergySubjects = ["Língua Portuguesa", "Raciocínio Lógico-Matemático", "Noções de Informática", "Legislação Básica/Específica", "Direito Administrativo/Constitucional", "Administração Geral e Pública"];
+
+            synergySubjects.forEach((subject, index) => {
                 const div = document.createElement('div');
                 div.className = 'flex items-center';
+                const isChecked = true; // Check all synergy subjects by default
                 div.innerHTML = `
-                    <input id="subject-check-${index}" name="subject-cycle" type="checkbox" value="${subject}" checked class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                    <input id="subject-check-${index}" name="subject-cycle" type="checkbox" value="${subject}" ${isChecked ? 'checked' : ''} class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
                     <label for="subject-check-${index}" class="ml-2 block text-sm text-gray-900">${subject}</label>
                 `;
                 checklist.appendChild(div);
             });
+
+            // Adiciona Química (como opcional)
+            const indexQuimica = synergySubjects.length;
+            const divQuimica = document.createElement('div');
+            divQuimica.className = 'flex items-center';
+            divQuimica.innerHTML = `
+                <input id="subject-check-${indexQuimica}" name="subject-cycle" type="checkbox" value="Conhecimentos Específicos" class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500">
+                <label for="subject-check-${indexQuimica}" class="ml-2 block text-sm text-gray-900">Química (Téc. Lab)</label>
+            `;
+            checklist.appendChild(divQuimica);
         }
 
         function renderComparator() {
             const selectedSubject = document.getElementById('subject-select').value;
             const data = syllabusData[selectedSubject] || {};
 
-            renderColumn('col-alerj', data.Alerj || []);
-            renderColumn('col-unirio', data.UNIRIO || [])
+            renderColumn('col-alerj', data["ALERJ - Nível III"] || [], "ALERJ - Nível III");
+            renderColumn('col-unirio-adm', data["UNIRIO - Assist. Adm."] || [], "UNIRIO - Assist. Adm.");
+            renderColumn('col-unirio-quimica', data["UNIRIO - Téc. Química"] || [], "UNIRIO - Téc. Química");
         }
 
-        function renderColumn(columnId, items) {
+        function renderColumn(columnId, items, cargo) {
             const col = document.getElementById(columnId);
             const ul = col.querySelector('ul');
             ul.innerHTML = '';
-            
-            if (items.length === 0) {
-                ul.innerHTML = '<li class="text-gray-500 italic">Nenhum conteúdo listado para esta matéria.</li>';
+
+            const isApplicable = items.length > 0;
+            if (!isApplicable) {
+                ul.innerHTML = '<li class="text-gray-500 italic">Conteúdo Não Aplicável ou Não Detalhado neste edital/cargo.</li>';
+                col.classList.add('opacity-50');
                 return;
+            } else {
+                col.classList.remove('opacity-50');
             }
-            
+
             items.forEach(item => {
                 const li = document.createElement('li');
                 li.textContent = item;
                 ul.appendChild(li);
             });
         }
-        
+
+        function getAlerjExclusiveTopics() {
+            // Tópicos que DEVEM ser reservados para a Fase 2 (Véspera ALERJ), focados em Legislação e Poder Legislativo RJ
+            const exclusiveTopics = [
+                { subject: "Legislação Básica/Específica", cargo: "ALERJ - Nível III", topic: "Código de Ética Profissional do Servidor Público do Estado do RJ (Decreto nº 43.583/2012)." },
+                { subject: "Legislação Básica/Específica", cargo: "ALERJ - Nível III", topic: "Estatuto dos Funcionários Públicos (Dec-Lei nº 220/1975) e seu regulamento (Decreto nº 2.479/1979)." },
+                { subject: "Legislação Básica/Específica", cargo: "ALERJ - Nível III", topic: "Regimento Interno da ALERJ (Resolução nº 810/1997)." },
+                { subject: "Legislação Básica/Específica", cargo: "ALERJ - Nível III", topic: "Plano de Carreira (Resolução nº 590/1994)." },
+                { subject: "Legislação Básica/Específica", cargo: "ALERJ - Nível III", topic: "A Constituição do Estado do Rio de Janeiro." },
+                { subject: "Direito Administrativo/Constitucional", cargo: "ALERJ - Nível III", topic: "Organização dos Poderes: Poder Legislativo (estrutura, competências, Comissões)." },
+                { subject: "Direito Administrativo/Constitucional", cargo: "ALERJ - Nível III", topic: "Processo Legislativo (espécies normativas, fases)." },
+                { subject: "Direito Administrativo/Constitucional", cargo: "ALERJ - Nível III", topic: "Fiscalização Contábil, Financeira e Orçamentária (TCU/TCE-RJ)." }
+            ];
+            return exclusiveTopics;
+        }
+
         function generateAndRenderPlan() {
             const startDateInput = document.getElementById('start-date').value;
             if (!startDateInput) {
-                alert("Por favor, selecione uma data de início.");
+                document.getElementById('topic-detail-panel').style.display = 'block';
+                document.getElementById('panel-empty-state').innerHTML = '<p class="text-red-600 font-bold">Por favor, selecione uma data de início.</p>';
                 return;
             }
-            
+
             const startDate = new Date(startDateInput + "T00:00:00-03:00");
-            const endDate = new Date(firstExamDate.getTime());
-            endDate.setDate(endDate.getDate() - 1);
+            const oneDay = 1000 * 60 * 60 * 24;
 
             const subjectCheckboxes = document.querySelectorAll('input[name="subject-cycle"]:checked');
             const cycleSubjects = Array.from(subjectCheckboxes).map(cb => cb.value);
 
             if (cycleSubjects.length === 0) {
-                alert("Por favor, selecione pelo menos uma matéria para o ciclo.");
+                document.getElementById('topic-detail-panel').style.display = 'block';
+                document.getElementById('panel-empty-state').innerHTML = '<p class="text-red-600 font-bold">Por favor, selecione pelo menos uma matéria para o ciclo.</p>';
                 return;
             }
 
+            // 1. Separar Tópicos
+            const alerjExclusive = getAlerjExclusiveTopics();
+            const generalTopics = [];
+
+            cycleSubjects.forEach(subject => {
+                const data = syllabusData[subject];
+                if (!data) return;
+
+                const cargos = ["UNIRIO - Assist. Adm.", "UNIRIO - Téc. Química", "ALERJ - Nível III"]; // Prioridade para sinergia
+
+                cargos.forEach(cargo => {
+                    const topics = data[cargo];
+                    if (topics && topics.length > 0) {
+                        topics.forEach(topic => {
+                            // Verifica se o tópico NÃO é ALERJ-Exclusivo e se já não foi adicionado (para sinergia)
+                            const isExclusive = alerjExclusive.some(t => t.topic === topic);
+                            const isDuplicate = generalTopics.some(t => t.topic === topic);
+
+                            if (!isExclusive && !isDuplicate) {
+                                // Adiciona o cargo mais relevante/abrangente para o tópico sinérgico.
+                                generalTopics.push({ subject: subject, cargo: cargo, topic: topic });
+                            }
+                        });
+                    }
+                });
+            });
+
+            // 2. Criação do Plano (Fase 1: Ciclo Espaçado Regular)
             studyPlan = [];
             let currentDate = new Date(startDate.getTime());
-            let subjectIndex = 0;
-            
-            const oneDay = 1000 * 60 * 60 * 24;
-            const totalDays = Math.round((endDate - startDate) / oneDay);
-            
-            if (totalDays < 0) {
-                 alert("A data de início deve ser anterior à data da prova.");
-                 return;
+            let topicIndex = 0;
+            let lastSubject = null;
+
+            // Ordena os tópicos gerais aleatoriamente para garantir o ciclo espaçado natural
+            generalTopics.sort(() => Math.random() - 0.5);
+
+            // Geração da Fase 1: Do início até a véspera da prova UNIRIO (31/01/2026)
+            while (currentDate.getTime() < firstExamDate.getTime()) {
+                const isoDate = currentDate.toISOString().split('T')[0];
+
+                let topicDetails = null;
+                let attempts = 0;
+
+                // Implementa o ciclo espaçado (não repete a matéria do dia anterior)
+                while (attempts < generalTopics.length) {
+                    const nextTopic = generalTopics[topicIndex];
+
+                    if (nextTopic.subject !== lastSubject) {
+                        topicDetails = nextTopic;
+                        lastSubject = nextTopic.subject;
+                        break;
+                    }
+                    // Tenta o próximo tópico
+                    topicIndex = (topicIndex + 1) % generalTopics.length;
+                    attempts++;
+                }
+
+                if (topicDetails) {
+                    studyPlan.push({
+                        date: isoDate,
+                        subject: topicDetails.subject,
+                        cargo: topicDetails.cargo,
+                        topic: topicDetails.topic,
+                        phase: 1,
+                        colorClass: topicDetails.subject.includes("Química") ? 'bg-red-100 text-red-800' : 'bg-indigo-100 text-indigo-800'
+                    });
+                } else {
+                    // Se não for possível evitar a repetição (só resta um tópico), usa o mesmo
+                    topicDetails = generalTopics[topicIndex];
+                     studyPlan.push({
+                        date: isoDate,
+                        subject: topicDetails.subject,
+                        cargo: topicDetails.cargo,
+                        topic: topicDetails.topic + " (REPETIÇÃO NECESSÁRIA)",
+                        phase: 1,
+                        colorClass: 'bg-yellow-100 text-yellow-800'
+                    });
+                     lastSubject = topicDetails.subject; // Atualiza mesmo com repetição
+                }
+
+                currentDate.setDate(currentDate.getDate() + 1);
+                topicIndex = (topicIndex + 1) % generalTopics.length; // Avança o índice do ciclo
             }
 
-            for (let i = 0; i <= totalDays; i++) {
+            // 3. Marcação do Dia da Prova UNIRIO (01/02/2026)
+            studyPlan.push({
+                date: firstExamDate.toISOString().split('T')[0],
+                subject: "PROVA UNIRIO",
+                cargo: "Assist. Adm. & Téc. Química",
+                topic: "Dia de Provas Objetivas UNIRIO. Descanso/Revisão Leve à noite.",
+                phase: 2,
+                colorClass: 'bg-red-600 text-white font-bold'
+            });
+
+            // 4. Geração da Fase 2 (Intensivão ALERJ): De 02/02/2026 a 07/02/2026
+            currentDate = new Date(alerjSpecificPhaseStart.getTime());
+            let alerjTopicIndex = 0;
+
+            while (currentDate.getTime() < finalExamDate.getTime()) {
                 const isoDate = currentDate.toISOString().split('T')[0];
-                studyPlan.push({
-                    date: isoDate,
-                    subject: cycleSubjects[subjectIndex]
-                });
-                
+                const topicDetails = alerjExclusive[alerjTopicIndex];
+
+                if (topicDetails) {
+                    studyPlan.push({
+                        date: isoDate,
+                        subject: topicDetails.subject,
+                        cargo: "ALERJ - Foco Exclusivo",
+                        topic: topicDetails.topic + " (INTENSIVÃO ALERJ)",
+                        phase: 2,
+                        colorClass: 'bg-indigo-600 text-white font-bold'
+                    });
+                } else {
+                    // Se acabarem os tópicos exclusivos, preenche com Revisão Geral ALERJ
+                    studyPlan.push({
+                        date: isoDate,
+                        subject: "REVISÃO GERAL",
+                        cargo: "ALERJ - Foco Exclusivo",
+                        topic: "Revisão Final de Pontos Críticos ALERJ (Simulado, Mapas Mentais).",
+                        phase: 2,
+                        colorClass: 'bg-yellow-600 text-white font-bold'
+                    });
+                }
+
                 currentDate.setDate(currentDate.getDate() + 1);
-                subjectIndex = (subjectIndex + 1) % cycleSubjects.length;
+                alerjTopicIndex++; // Avança linearmente
             }
 
             currentCalendarDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
             renderCalendar();
-            
+
+            // Limpar o painel de detalhes e focar na aba
+            document.getElementById('topic-detail-panel').style.display = 'block';
+            document.getElementById('panel-empty-state').style.display = 'block';
+            document.getElementById('panel-subject').textContent = '';
+            document.getElementById('panel-cargo').textContent = '';
+            document.getElementById('panel-topic').textContent = '';
+            document.getElementById('panel-date').textContent = '';
+
             document.getElementById('tab-plan').click();
+        }
+
+        function showTopicDetails(isoDate) {
+            const planEntry = studyPlan.find(entry => entry.date === isoDate);
+            const panel = document.getElementById('topic-detail-panel');
+            const emptyState = document.getElementById('panel-empty-state');
+
+            if (planEntry) {
+                emptyState.style.display = 'none';
+                panel.style.display = 'block';
+
+                const formattedDate = new Date(planEntry.date + "T00:00:00-03:00").toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+
+                document.getElementById('panel-date').textContent = formattedDate;
+                document.getElementById('panel-subject').textContent = planEntry.subject;
+                document.getElementById('panel-cargo').textContent = planEntry.cargo;
+                document.getElementById('panel-topic').textContent = planEntry.topic;
+
+            } else {
+                 panel.style.display = 'block';
+                 emptyState.style.display = 'block';
+                 const cellDate = new Date(isoDate + "T00:00:00-03:00");
+                 const formattedDate = cellDate.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+                 document.getElementById('panel-date').textContent = formattedDate;
+                 document.getElementById('panel-empty-state').innerHTML = `<p class="font-bold">Nenhum estudo agendado para ${formattedDate}.</p>`;
+            }
         }
 
         function renderCalendar() {
             const calendarDays = document.getElementById('calendar-days');
             calendarDays.innerHTML = '';
-            
+
             const month = currentCalendarDate.getMonth();
             const year = currentCalendarDate.getFullYear();
-            
+
             document.getElementById('current-month-year').textContent = `${currentCalendarDate.toLocaleDateString('pt-BR', { month: 'long' })} de ${year}`;
-            
+
             const firstDayOfMonth = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const today = new Date().toISOString().split('T')[0];
+            const todayIso = new Date().toISOString().split('T')[0];
 
             for (let i = 0; i < firstDayOfMonth; i++) {
                 const emptyCell = document.createElement('div');
@@ -391,31 +672,35 @@
                 const dayCell = document.createElement('div');
                 const cellDate = new Date(year, month, day);
                 const isoDate = cellDate.toISOString().split('T')[0];
-                
+
                 let cellClasses = 'calendar-day relative p-2 border-t border-l border-gray-200 bg-white';
-                if (isoDate === today) {
+                if (isoDate === todayIso) {
                     cellClasses += ' today';
                 }
 
                 dayCell.className = cellClasses;
-                
-                let dayHtml = `<div class="font-semibold text-sm ${isoDate === today ? 'text-indigo-600' : 'text-gray-800'}">${day}</div>`;
-                
+
+                let dayHtml = `<div class="font-semibold text-sm ${isoDate === todayIso ? 'text-indigo-600' : 'text-gray-800'}">${day}</div>`;
+
                 const planEntry = studyPlan.find(entry => entry.date === isoDate);
-                
+
                 if (planEntry) {
-                    dayHtml += `<div class="mt-1 p-1 bg-indigo-100 rounded-md text-xs text-indigo-800 font-medium truncate">${planEntry.subject}</div>`;
+                    dayHtml += `<div class="mt-1 p-1 ${planEntry.colorClass} rounded-md text-xs font-medium truncate" data-iso-date="${isoDate}" title="${planEntry.topic}">${planEntry.subject.split('(')[0].trim()}</div>`;
                 }
 
-                const examEntry = timelineData.find(entry => entry.date === isoDate && entry.event.includes("Prova"));
-                if (examEntry) {
-                    dayHtml += `<div class="mt-1 p-1 bg-red-500 rounded-md text-xs text-white font-bold truncate">${examEntry.concurso}</div>`;
+                const examEntries = timelineData.filter(entry => entry.date === isoDate && entry.event.includes("Prova"));
+                if (examEntries.length > 0) {
+                     examEntries.forEach(exam => {
+                        dayHtml += `<div class="mt-1 p-1 bg-red-600 rounded-md text-xs text-white font-bold truncate">${exam.concurso.split(' - ')[1]}</div>`;
+                     });
                 }
 
                 dayCell.innerHTML = dayHtml;
+                dayCell.addEventListener('click', () => showTopicDetails(isoDate));
                 calendarDays.appendChild(dayCell);
             }
-            
+
+            // Preencher células vazias no final
             const totalCells = firstDayOfMonth + daysInMonth;
             const remainingCells = 7 - (totalCells % 7);
             if (remainingCells < 7) {
@@ -426,7 +711,7 @@
                 }
             }
         }
-        
+
         function changeMonth(delta) {
             currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta);
             renderCalendar();
