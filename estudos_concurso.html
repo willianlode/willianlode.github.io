@@ -519,7 +519,7 @@
             let currentDate = new Date(startDate.getTime());
             let topicIndex = 0;
             let lastSubject = null;
-
+            const removedTopics=[];
             // Ordena os tópicos gerais aleatoriamente para garantir o ciclo espaçado natural
             //generalTopics.sort(() => Math.random() - 0.5);
             console.log(generalTopics);
@@ -537,6 +537,7 @@
                     if (nextTopic.subject !== lastSubject) {
                         topicDetails = nextTopic;
                         lastSubject = nextTopic.subject;
+                        removedTopics.push(generalTopics.splice(topicIndex, 1));
                         break;
                     }
                     // Tenta o próximo tópico
