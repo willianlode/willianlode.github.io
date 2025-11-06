@@ -507,6 +507,7 @@
                             if (!isExclusive && !isDuplicate) {
                                 // Adiciona o cargo mais relevante/abrangente para o tópico sinérgico.
                                 generalTopics.push({ subject: subject, cargo: cargo, topic: topic });
+                                
                             }
                         });
                     }
@@ -521,7 +522,7 @@
 
             // Ordena os tópicos gerais aleatoriamente para garantir o ciclo espaçado natural
             //generalTopics.sort(() => Math.random() - 0.5);
-
+            console.log(generalTopics);
             // Geração da Fase 1: Do início até a véspera da prova UNIRIO (31/01/2026)
             while (currentDate.getTime() < firstExamDate.getTime()) {
                 const isoDate = currentDate.toISOString().split('T')[0];
