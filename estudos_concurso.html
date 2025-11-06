@@ -393,7 +393,7 @@
             const checklist = document.getElementById('subject-cycle-checklist');
             checklist.innerHTML = '';
             // Matérias que compõem o ciclo sinérgico principal
-            const synergySubjects = ["Língua Portuguesa", "Raciocínio Lógico-Matemático", "Noções de Informática", "Legislação Básica/Específica", "Direito Administrativo/Constitucional", "Administração Geral e Pública"];
+            const synergySubjects = ["Língua Portuguesa", "Raciocínio Lógico-Matemático", "Noções de Informática", "Legislação Básica/Específica (Conhecimentos Específicos)", "Direito Administrativo/Constitucional (Conhecimentos Específicos)", "Administração Geral e Pública (Conhecimentos Específicos)"];
 
             synergySubjects.forEach((subject, index) => {
                 const div = document.createElement('div');
@@ -411,8 +411,8 @@
             const divQuimica = document.createElement('div');
             divQuimica.className = 'flex items-center';
             divQuimica.innerHTML = `
-                <input id="subject-check-${indexQuimica}" name="subject-cycle" type="checkbox" value="Conhecimentos Específicos" class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500">
-                <label for="subject-check-${indexQuimica}" class="ml-2 block text-sm text-gray-900">Química (Téc. Lab)</label>
+                <input id="subject-check-${indexQuimica}" name="subject-cycle" type="checkbox" value="Química (Conhecimentos Específicos)" checked class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500">
+                <label for="subject-check-${indexQuimica}" class="ml-2 block text-sm text-gray-900">Química (Conhecimentos Específicos)</label>
             `;
             checklist.appendChild(divQuimica);
         }
