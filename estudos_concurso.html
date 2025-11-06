@@ -304,8 +304,7 @@
             const data = syllabusData[selectedSubject] || {};
 
             renderColumn('col-alerj', data.Alerj || []);
-            renderColumn('col-unirio', data.UNIRIO || []);
-            renderColumn('col-tjrj', data.TJRJ || []);
+            renderColumn('col-unirio', data.UNIRIO || [])
         }
 
         function renderColumn(columnId, items) {
