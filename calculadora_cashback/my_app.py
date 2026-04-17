@@ -27,7 +27,7 @@ def adicionar_registro():
     # opcional adicionar cupom para calcular preço descontado
         #cupom = float(dados.get('cupom'))
         #valor=valor*(1-cupom/100)
-        
+
     # O cálculo do cashback é feito no backend por práticas comuns de segurança
     cashback_pct=5
     if str.upper(tipo_cliente)=="VIP":
@@ -36,7 +36,7 @@ def adicionar_registro():
     if valor>500.0:
         cashback_total=cashback_total*2 
     ip = pegar_ip_usuario()
-    print(cashback_total)
+    
     # Inserção no Postgres via Supabase
     resposta = supabase.table('historico_consultas').insert({
         'ip_usuario': ip,
