@@ -1,4 +1,4 @@
-const API_URL = 'https://www.pythonanywhere.com/user/willianlode/webapps/#id_willianlode_pythonanywhere_com'; 
+const API_URL = 'https://https://willianlode.pythonanywhere.com'; 
 
 // Função para buscar o histórico da API
 async function carregarHistorico() {
@@ -25,10 +25,8 @@ async function carregarHistorico() {
 // Função para enviar os dados do formulário para a API
 document.getElementById('meuFormulario').addEventListener('submit', async (evento) => {
     evento.preventDefault(); // Evita que a página recarregue
-
     const valor = document.getElementById('valor').value;
     const tipo_cliente = document.getElementById('tipo_cliente').value;
-
     try {
         await fetch(`${API_URL}/adicionar`, {
             method: 'POST',
