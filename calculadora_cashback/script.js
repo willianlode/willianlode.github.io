@@ -21,7 +21,6 @@ async function carregarHistorico() {
         console.error("Erro ao carregar histórico:", erro);
     }
 }
-
 // Função para enviar os dados do formulário para a API
 document.getElementById('meuFormulario').addEventListener('submit', async (evento) => {
     evento.preventDefault(); // Evita que a página recarregue
