@@ -1,0 +1,110 @@
+body{
+    margin: 0vw;
+    height: 100dvh;
+    width: 100dvw;
+    background: linear-gradient(purple, darkred ,red, rgb(246, 83, 110), blue) no-repeat;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+header{
+    text-align:center;
+    color: rgb(228, 0, 43);
+    width: 100dvw;
+    padding: 1vh;
+    font-size: 2em;
+    background-color: rgb(1, 33, 105);
+    flex-shrink: 0;
+}
+main{
+    display: flex;
+    justify-content:flex-start;
+    align-items:center;
+    flex-direction: column;
+    flex: 1;
+    overflow-y: auto;
+    gap: 30px;
+}
+
+form{
+    display: flex;
+    justify-content: center;
+    align-items:flex-start;
+    flex-direction: column;
+}
+fieldset{   
+    border-radius: 4vh;
+}
+main >div{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;    
+    padding: 5px 20px;
+    border: 1.6px solid rgb(240,240, 240);
+    border-radius: 4vh;
+    max-height: 40vh;
+    overflow-y: auto;
+}
+label{
+    margin: 0.5vh;
+    display:inline-table;
+    color: rgb(255, 255, 255);
+}
+legend{
+    text-align: center; 
+    color: rgb(15, 12, 97);
+    font-size:22px;
+    font-weight: 600;
+    margin: 0.5vh;
+}
+input{
+    margin: 0.5vh;
+    border-radius: 2vh;
+}
+
+input[type="submit"]:hover{
+    cursor: pointer;
+    background-color: aqua;
+}
+button{
+    margin: 0.5vh;
+    border-radius: 2vh;
+}
+button:hover{
+    cursor: pointer;
+    background-color: aqua;
+}
+
+footer{
+    margin: 0;
+    display: flex;
+    bottom:0px;
+    width: 100dvw;
+    flex-direction: column;
+    font-weight: 600;
+    font-size: large;
+    flex-shrink: 0;
+}
+footer div{
+    margin: 0vh 20vh;
+    align-self: center;
+}
+footer ul{
+    display: flex;
+    gap: 20vw;
+}
+footer li{
+    list-style-type: none;
+}
+footer a{
+    text-decoration-line: none;
+    color:inherit;
+   
+}
+footer a:hover{
+    color: rgb(128, 72, 7);
+}
+li li{
+    color: brown;
+}

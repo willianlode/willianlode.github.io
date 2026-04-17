@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de cashback</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <header>Calculadora de cashback</header>
+    <main>
+        <fieldset>
+            <legend>Calcule seu cashback! </legend>
+            <form action="" method ="get" id="meuFormulario">
+                <div>
+                    <label for="valor">Digite o valor final da compra: 
+                        <input type="number" id="valor" step="0.01" required> 
+                    </label>   
+                </div>
+                <div>
+                    <label for="tipo_cliente">Escolha o tipo de cliente: 
+                        <select name="tipo_cliente" id="tipo_cliente">
+                            <option value="padrao">-- Selecione uma opção --</option>
+                            <option value="vip">VIP</option>
+                            <option value="padrao">Padrão</option>
+                        </select>
+                    </label>
+                </div>
+                <div>
+                    <button type="submit">Enviar</button> 
+                    <button type="reset">Limpar</button>
+                </div>
+            </form>
+        </fieldset>
+        <div>
+            <h2>Meu Histórico</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tipo de Cliente</th>
+                        <th>Valor da Compra</th>
+                        <th>Cashback</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaHistorico">
+                    </tbody>
+            </table>
+        </div>
+    </main>
+    
+    <footer>
+        <div>Willian Lode</div>
+    
+        <div>
+            <ul>
+                <li><a href="https://www.linkedin.com/in/willianlode/" target="_blank">LinkedIn</a></li>
+                <li><a href="https://github.com/willianlode" target="_blank">Github</a></li>
+                <li><a href="mailto: willianlode@hotmail.com">willianlode@hotmail.com</a></li>
+            </ul>
+        </div>
+    </footer>
+ 
+    <script src="./script.js"></script>
+</body>
+</html>
