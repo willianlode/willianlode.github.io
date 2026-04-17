@@ -1,4 +1,4 @@
-const API_URL = 'https://https://willianlode.pythonanywhere.com'; 
+const API_URL = 'https://willianlode.pythonanywhere.com'; 
 
 // Função para buscar o histórico da API
 async function carregarHistorico() {
