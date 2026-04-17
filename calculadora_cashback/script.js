@@ -26,6 +26,8 @@ document.getElementById('meuFormulario').addEventListener('submit', async (event
     evento.preventDefault(); // Evita que a página recarregue
     const valor = document.getElementById('valor').value;
     const tipo_cliente = document.getElementById('tipo_cliente').value;
+    // opcional adicionar cupom para calcular preço descontado
+    //const cupom = document.getElementById('cupom').value;
     try {
         await fetch(`${API_URL}/adicionar`, {
             method: 'POST',
@@ -33,6 +35,8 @@ document.getElementById('meuFormulario').addEventListener('submit', async (event
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ valor, tipo_cliente })
+            // opcional adicionar cupom para calcular preço descontado
+            //body: JSON.stringify({ valor, tipo_cliente, cupom })
         });
 
         // Limpa o formulário

@@ -24,6 +24,10 @@ def adicionar_registro():
     dados = request.json
     tipo_cliente = dados.get('tipo_cliente')
     valor = float(dados.get('valor'))
+    # opcional adicionar cupom para calcular preço descontado
+        #cupom = float(dados.get('cupom'))
+        #valor=valor*(1-cupom/100)
+        
     # O cálculo do cashback é feito no backend por práticas comuns de segurança
     cashback_pct=5
     if str.upper(tipo_cliente)=="VIP":
@@ -55,6 +59,6 @@ def listar_historico():
         .execute()
     
     return jsonify(resposta.data), 200
-#adicionar_registro()
+
 if __name__ == '__main__':
     app.run(debug=True)
